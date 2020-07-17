@@ -4,14 +4,14 @@ import json
 from discord.ext import commands
 
 class DevCog(commands.Cog, name='Dev', command_attrs=dict(hidden=True)):
-    def __init__(self, bot, data):
+    def __init__(self, bot):
         self.bot = bot
 
     @commands.command(name='loadcog', brief='Loads a cog.', aliases=['load'])
     @commands.is_owner()
     async def load_cog(self, ctx, cog: str):
         try:
-            self.bot.load_extension('bot.cogs.'+cog)
+            self.bot.load_extension('cogs.'+cog)
         except Exception as error:
             await ctx.send(f'Unable to load cog `{cog}`.')
             await ctx.send(f'Error: `{error}`')
@@ -22,7 +22,7 @@ class DevCog(commands.Cog, name='Dev', command_attrs=dict(hidden=True)):
     @commands.is_owner()
     async def unload_cog(self, ctx, cog: str):
         try:
-            self.bot.unload_extension('bot.cogs.'+cog)
+            self.bot.unload_extension('cogs.'+cog)
         except Exception as error:
             await ctx.send(f'Unable to unload cog `{cog}`.')
             await ctx.send(f'Error: `{error}`')
@@ -33,7 +33,7 @@ class DevCog(commands.Cog, name='Dev', command_attrs=dict(hidden=True)):
     @commands.is_owner()
     async def reload_cog(self, ctx, cog: str):
         try:
-            self.bot.reload_extension('bot.cogs.'+cog)
+            self.bot.reload_extension('cogs.'+cog)
         except Exception as error:
             await ctx.send(f'Unable to reload cog `{cog}`.')
             await ctx.send(f'Error: `{error}`')
@@ -44,9 +44,9 @@ class DevCog(commands.Cog, name='Dev', command_attrs=dict(hidden=True)):
     @commands.is_owner()
     async def logout(self, ctx):
         # self.data["bot"]["login"] = 0
-        await ctx.invoke(self.bot.get_command('export'))
+        # await ctx.invoke(self.bot.get_command('export'))
         await ctx.send('zzz...')
         await self.bot.logout()
 
 def setup(bot):
-    bot.add_cog(DevCog(bot, data))
+    bot.add_cog(DevCog(bot))
