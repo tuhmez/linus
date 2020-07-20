@@ -61,19 +61,12 @@ class Bartend(commands.Cog, name='bartend', command_attrs=dict(hidden=False)):
     embed = await self.embed_drink(drinkName, url, drinkImage, drinkDescription)
     await ctx.send(embed=embed)
 
-
+# ingredient command, not supported
   # @commands.command(name='ingredient', brief='Get drinks based on an ingredient!')
   # async def get_drink_by_ingredient(self, ctx, *, ingredient: str):
   #   async with aiohttp.ClientSession() as session:
   #     url = self.drinkIngredientUrl + ingredient
   #     html = await self.fetch(session, url)
-
-  # async def main():
-  #   async with aiohttp.ClientSession() as session:
-  #     html = await fetch(session, 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita')
-  #     print(json.loads(html)['drinks'])
-  #     for drink in json.loads(html)['drinks']:
-  #       print(drink)
 
 def setup(bot):
   bot.add_cog(Bartend(bot))
