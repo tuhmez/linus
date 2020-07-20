@@ -30,36 +30,40 @@ class Bartend(commands.Cog, name='bartend', command_attrs=dict(hidden=False)):
 
   @commands.command(name='random', brief='Get a random drink!')
   async def get_random_drink(self, ctx):
-    async with aiohttp.ClientSession() as session:
-      html = await self.fetch(session, self.randomUrl)
-      drink = json.loads(html)['drinks'][0]
+    drink = None
+    while True:
+      async with aiohttp.ClientSession() as session:
+        html = await self.fetch(session, self.randomUrl)
+        drink = json.loads(html)['drinks'][0]
 
-      drinkId = drink['idDrink']
-      drinkName = drink['strDrink']
-      drinkNameFormatted = drinkName.replace(' ', '-')
-      url = f'{self.drinkLandingUrl}{drinkId}-{drinkNameFormatted}'
-      drinkImage = drink['strDrinkThumb']
+        if drink['strAlcoholic'] == 'Alcoholic': break
 
-      drinkDescription = ''
-      i = 1
-      while i < 16:
-        ingredientKey = f'strIngredient{i}'
-        measureKey = f'strMeasure{i}'
-        ingredient = drink[ingredientKey]
-        measure = drink[measureKey]
-        if ingredient is None: break
-        drinkDescription += f'{measure} {ingredient}'
-        if i < 15 and ingredient is not None: drinkDescription += '\n'
-        i += 1
-      embed = await self.embed_drink(drinkName, url, drinkImage, drinkDescription)
-      await ctx.send(embed=embed)
+    drinkId = drink['idDrink']
+    drinkName = drink['strDrink']
+    drinkNameFormatted = drinkName.replace(' ', '-')
+    url = f'{self.drinkLandingUrl}{drinkId}-{drinkNameFormatted}'
+    drinkImage = drink['strDrinkThumb']
+
+    drinkDescription = ''
+    i = 1
+    while i < 16:
+      ingredientKey = f'strIngredient{i}'
+      measureKey = f'strMeasure{i}'
+      ingredient = drink[ingredientKey]
+      measure = drink[measureKey]
+      if ingredient is None: break
+      drinkDescription += f'{measure} {ingredient}'
+      if i < 15 and ingredient is not None: drinkDescription += '\n'
+      i += 1
+    embed = await self.embed_drink(drinkName, url, drinkImage, drinkDescription)
+    await ctx.send(embed=embed)
 
 
-  @commands.command(name='ingredient', brief='Get drinks based on an ingredient!')
-  async def get_drink_by_ingredient(self, ctx, *, ingredient: str):
-    async with aiohttp.ClientSession() as session:
-      url = self.drinkIngredientUrl + ingredient
-      html = await self.fetch(session, url)
+  # @commands.command(name='ingredient', brief='Get drinks based on an ingredient!')
+  # async def get_drink_by_ingredient(self, ctx, *, ingredient: str):
+  #   async with aiohttp.ClientSession() as session:
+  #     url = self.drinkIngredientUrl + ingredient
+  #     html = await self.fetch(session, url)
 
   # async def main():
   #   async with aiohttp.ClientSession() as session:
