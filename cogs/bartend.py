@@ -52,7 +52,10 @@ class Bartend(commands.Cog, name='bartend', command_attrs=dict(hidden=False)):
       ingredient = drink[ingredientKey]
       measure = drink[measureKey]
       if ingredient is None: break
-      drinkDescription += f'{measure} {ingredient}'
+      if measure is None:
+        drinkDescription += f'{ingredient}'
+      else:
+        drinkDescription += f'{measure} {ingredient}'
       if i < 15 and ingredient is not None: drinkDescription += '\n'
       i += 1
     embed = await self.embed_drink(drinkName, url, drinkImage, drinkDescription)
